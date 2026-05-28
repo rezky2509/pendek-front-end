@@ -18,7 +18,7 @@ const sideBar: listOfMenu[] = [
     },
     {
         title: 'Get-out',
-        endpoint: '/logout',
+        endpoint: '/api/users',
     },
 ]
 

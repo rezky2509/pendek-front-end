@@ -1,15 +1,28 @@
 'use client';
 import { useEffect, useState } from 'react';
+import {apiStatus} from '../app/services/api'
 
 export default function FooterDashboard() {
-    const [active, setActive] = useState(true);
+    const [active, setActive] = useState<boolean>(false);
+    const [statusApi, setStatusApi] = useState<boolean>(false)
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setActive(prev => !prev);
-        }, 2000);
-        return () => clearInterval(interval);
-    }, []);
+        useEffect(() => {
+            const checkStatus = async () => {
+                try {
+                    // const isAlive = await apiStatus();
+                    // Set specifically to true, don't toggle !prev unless you want a blinking light
+                    // setActive(!isAlive); 
+                } catch (error) {
+                    console.error(error)
+                    setActive(false);
+                    // Don't use alert() here, it blocks the browser thread!
+                }
+            };
+            // Run once immediately, then every 1 Minute (easier on your EC2 CPU)
+            // checkStatus();
+            const interval = setInterval(checkStatus, 10000); 
+            return () => clearInterval(interval);
+        }, []);
 
     return (
         <footer className="dashboard-footer">

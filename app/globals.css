@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "tailwindcss";
+@import "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -190,6 +192,7 @@ main {
     max-width: 1200px;
     margin: 0 auto;
     padding: var(--spacing-unit);
+    overflow-y: auto;
 }
 
 .hero-text {
@@ -282,7 +285,7 @@ input[type="text"] {
     color: var(--fg);
     font-family: inherit;
     font-size: 1.25rem;
-    padding: 24px 24px 24px 48px;
+    /* padding: 24px 24px 24px 48px; */
     outline: none;
     border-radius: 0;
     transition: box-shadow 0.2s;
@@ -540,4 +543,217 @@ footer {
 
 .sidebar-btn.active {
     font-weight: 800 !important;
+}
+
+/* Register Form Styles */
+
+ 
+.register-container {
+    width: 100%;
+    max-width: 400px;
+    border: var(--border-width) solid var(--fg);
+    padding: 10px;
+    background: var(--bg);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    /* gap: 24px; */
+}
+
+.form-header {
+    border-bottom: var(--border-width) solid var(--fg);
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+}
+
+.form-title {
+    font-weight: 800;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
+
+.form-input {
+    width: 100%;
+    border: 1px solid var(--fg);
+    padding: 12px;
+    font-family: var(--font-stack);
+    font-size: 0.9rem;
+    outline: none;
+    margin-bottom: 10px;
+}
+
+.form-input:focus {
+    background: #f8f8f8;
+    border-width: 2px;
+}
+
+.btn-submit {
+    background: var(--fg);
+    color: var(--bg);
+    border: var(--border-width) solid var(--fg);
+    font-family: var(--font-stack);
+    font-size: 0.9rem;
+    font-weight: 800;
+    padding: 14px;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-top: 12px;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.btn-submit:hover {
+    background: var(--bg);
+    color: var(--fg);
+    box-shadow: 4px 4px 0px var(--fg);
+    transform: translate(-2px, -2px);
+}
+
+.form-footer {
+    font-size: 0.75rem;
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 8px;
+}
+
+.form-link {
+    font-weight: 700;
+    color: var(--fg);
+    text-decoration: underline;
+}
+
+.checkbox-group {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.checkbox-group input {
+    margin-top: 3px;
+    accent-color: var(--fg);
+}
+
+/* Register form */
+/* @media (min-width: 300px){
+    .register-container{
+        min-width: 100px;
+        margin-left: 0px;
+        padding: 10px;
+    }
+        
+    .form-title {
+        font-size: 1rem;
+    }
+    
+    .form-input {
+        padding: 10px;
+        font-size: 0.8rem;
+    }
+    
+    .btn-submit {
+        padding: 12px;
+        font-size: 0.8rem;
+    }
+    
+    .form-label {
+        font-size: 0.6rem;
+    }
+} */
+
+/* THis for mobile first  */
+@media (max-width: 768px) {
+    .register-container {
+        padding: 30px;
+        gap: 16px;
+    }
+    
+    .form-title {
+        font-size: 1.25rem;
+    }
+    
+    .form-input {
+        padding: 10px;
+        font-size: 0.8rem;
+        margin-bottom: 20px;
+    }
+    
+    .btn-submit {
+        padding: 12px;
+        font-size: 0.8rem;
+    }
+    
+    .form-label {
+        font-size: 0.6rem;
+    }
+}
+
+/* Login Form Styles */
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    border: var(--border-width) solid var(--fg);
+    padding: 40px;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    z-index: 5;
+}
+
+.login-header {
+    border-bottom: var(--border-width) solid var(--fg);
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+}
+
+.login-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.auth-footer-links {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+.auth-footer-links a {
+    color: var(--fg);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+}
+
+.auth-footer-links a:hover {
+    border-bottom: 1px solid var(--fg);
+}
+
+.version-block {
+    display: flex;
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        padding: 24px;
+        gap: 16px;
+    }
 }

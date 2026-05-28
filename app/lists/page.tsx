@@ -1,7 +1,44 @@
+"use client"
+
 import DashboardHeader from '@/components/dashboardHeader';
 import Sidebar from '@/components/Sidebar';
+import { useEffect, useState } from 'react';
+import { getURLlist } from '../services/api';
+import { API_RESPONSE, recentlyAddedLinkData, recentlyAddedLinksData} from '../types/types';
+import Link from 'next/link';
+import { useTimeAgo } from 'next-timeago';
 
-const Page = () => {
+// Modal Component
+import ModalFormURL from '@/components/ModalFormURL';
+
+const Page = () => {    
+
+    // useTimeAgo hooks
+    const {TimeAgo} = useTimeAgo()
+
+    // Modal Opening tracking 
+    const [isModalOpen,setIsModalOpen] = useState<boolean>(false)
+
+    const [getListsURL,setGetListsURL] = useState<API_RESPONSE<recentlyAddedLinksData>| null>(null)
+
+    const getURLList = async() => {
+        const result = await getURLlist()
+        if(result.success === true){
+            console.info('API Fetch Success')
+            setGetListsURL(result)
+        } else if(result.success === false){
+            alert('Bad Request')
+        }else{
+            // Later add toast
+            alert('No data')
+        }  
+    }
+    // Flowbite Installation error
+    // https://github.com/themesberg/flowbite-react/issues/1620
+
+    useEffect(()=>{
+        getURLList()
+    },[])
     return (
         <>
             <DashboardHeader />
@@ -11,7 +48,13 @@ const Page = () => {
                     <div className='section-header'>
                         <h1 className='section-title'>All Links</h1>
                     </div>
-
+                    <div className='grid grid-cols-1'>
+                        <div className="flex flex-item justify-end">
+                            <button onClick={()=>setIsModalOpen(true)} className='bg-white text-2xl p-2'>Add new url</button>
+                        </div>
+                    </div>
+                    {/* Modal Component Go here */}
+                    <ModalFormURL isOpen={isModalOpen} onClose={()=>setIsModalOpen(false)}/>
                     <div className="table-container">
                         <table className="url-table">
                             <thead>
@@ -19,92 +62,31 @@ const Page = () => {
                                     <th>Short Path</th>
                                     <th>Destination</th>
                                     <th>Clicks</th>
+                                    <th>Description</th>
                                     <th>Status</th>
                                     <th>Created</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><span className="short-url">shrt.io/x92f</span></td>
-                                    <td><span className="long-url">https://github.com/design-systems/tokens/main/dist...</span></td>
-                                    <td>1,204</td>
-                                    <td><span className="tag">Active</span></td>
-                                    <td>2m ago</td>
-                                </tr>
-                                <tr>
-                                    <td><span className="short-url">shrt.io/promo</span></td>
-                                    <td><span className="long-url">https://store.company.com/seasonal-campaign-2023-black-friday</span></td>
-                                    <td>8,442</td>
-                                    <td><span className="tag active">Active</span></td>
-                                    <td>1h ago</td>
-                                </tr>
-                                <tr>
-                                    <td><span className="short-url">shrt.io/beta-v2</span></td>
-                                    <td><span className="long-url">https://staging.app.io/test-environment-alpha-user-7</span></td>
-                                    <td>43</td>
-                                    <td><span className="tag">Paused</span></td>
-                                    <td>3h ago</td>
-                                </tr>
-                                <tr>
-                                    <td><span className="short-url">shrt.io/k8s-log</span></td>
-                                    <td><span className="long-url">https://monitoring.internal.net/dashboard/cluster-01/logs</span></td>
-                                    <td>256</td>
-                                    <td><span className="tag">Active</span></td>
-                                    <td>5h ago</td>
-                                </tr>
-                                <tr>
-                                    <td><span className="short-url">shrt.io/k8s-log</span></td>
-                                    <td><span className="long-url">https://monitoring.internal.net/dashboard/cluster-01/logs</span></td>
-                                    <td>256</td>
-                                    <td><span className="tag">Active</span></td>
-                                    <td>5h ago</td>
-                                </tr>
-                                <tr>
-                                    <td><span className="short-url">shrt.io/k8s-log</span></td>
-                                    <td><span className="long-url">https://monitoring.internal.net/dashboard/cluster-01/logs</span></td>
-                                    <td>256</td>
-                                    <td><span className="tag">Active</span></td>
-                                    <td>5h ago</td>
-                                </tr>
-                                <tr>
-                                    <td><span className="short-url">shrt.io/k8s-log</span></td>
-                                    <td><span className="long-url">https://monitoring.internal.net/dashboard/cluster-01/logs</span></td>
-                                    <td>256</td>
-                                    <td><span className="tag">Active</span></td>
-                                    <td>5h ago</td>
-                                </tr>
-                                <tr>
-                                    <td><span className="short-url">shrt.io/k8s-log</span></td>
-                                    <td><span className="long-url">https://monitoring.internal.net/dashboard/cluster-01/logs</span></td>
-                                    <td>256</td>
-                                    <td><span className="tag">Active</span></td>
-                                    <td>5h ago</td>
-                                </tr>
-                                <tr>
-                                    <td><span className="short-url">shrt.io/k8s-log</span></td>
-                                    <td><span className="long-url">https://monitoring.internal.net/dashboard/cluster-01/logs</span></td>
-                                    <td>256</td>
-                                    <td><span className="tag">Active</span></td>
-                                    <td>5h ago</td>
-                                </tr>
-                                <tr>
-                                    <td><span className="short-url">shrt.io/k8s-log</span></td>
-                                    <td><span className="long-url">https://monitoring.internal.net/dashboard/cluster-01/logs</span></td>
-                                    <td>256</td>
-                                    <td><span className="tag">Active</span></td>
-                                    <td>5h ago</td>
-                                </tr>
-                                <tr>
-                                    <td><span className="short-url">shrt.io/k8s-log</span></td>
-                                    <td><span className="long-url">https://monitoring.internal.net/dashboard/cluster-01/logs</span></td>
-                                    <td>256</td>
-                                    <td><span className="tag">Active</span></td>
-                                    <td>5h ago</td>
-                                </tr>
+                                {getListsURL?.payload.data.map((link: recentlyAddedLinkData)=>(
+                                    <tr key={link._id}>
+                                        <td className='font-bold'><Link target='_blank' href={link.short_url} >{link.short_url}</Link></td>
+                                        <td>{link.long_url}</td>
+                                        <td>{link.total_clicks}</td>
+                                        <td>{link.description}</td>
+                                        <td>
+                                            <span className={`tag ${link.is_active ? 'active' : ''}`}>
+                                                {link.is_active ? 'Active' : 'Inactive'}
+                                            </span>
+                                        </td>
+                                        <td><TimeAgo date={link.created_at} locale='my'/></td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
                 </section>
+
             </main >
         </>
     );
