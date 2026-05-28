@@ -9,7 +9,7 @@ Pendek is a modern web application designed to turn long, clunky URLs into neat,
 
     Fast Performance: Optimized with Next.js for near-instant load times.
 
-    Instant Shortening: Transform links in a single click using [Insert API Name].
+    Instant Shortening: Transform links in a single click using my developed Bun runtime and Hono Framework.
 
     Copy to Clipboard: One-tap functionality to grab your new link.
 
@@ -17,7 +17,7 @@ Pendek is a modern web application designed to turn long, clunky URLs into neat,
 
 🛠️ Built With
 
-    Framework: Next.js 15 (App Router)
+    Framework: Next.js 15 
 
     Language: TypeScript 
 
