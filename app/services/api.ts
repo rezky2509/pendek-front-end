@@ -6,7 +6,7 @@
 // Cannot use VITE because NextJS had built in runtime turbopack
 
 // Axios 
-import axios, { AxiosError } from 'axios'
+import axios, { AxiosError, isAxiosError } from 'axios'
 
 // Store the token on cookies
 import { cookies, headers } from 'next/headers';
@@ -15,11 +15,10 @@ import { cookies, headers } from 'next/headers';
 import { formRegistration } from '../validation/formValidation';
 import { loginFormValidation } from '../validation/loginValidation';
 import { apiLoginResponse, dashboardMetaData, errorResponse, API_RESPONSE, recentlyAddedLinksData, userLinkRegistration } from '../types/types';
-import { success } from 'zod';
-import { fa } from 'zod/v4/locales';
-
+import { linkRegistration } from '../validation/linkRegistrationValidation';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+// const BASE_URL = process.env.NEXT_AWS_EC2_BASE_URL;
 
 
 export async function apiStatus(){
@@ -45,6 +44,7 @@ export async function apiStatus(){
 // This work. Need to return the result only. 
 export async function registerUser(userData: formRegistration){
     try {
+        console.log('Registering')
         const result = await axios.post(BASE_URL+"/api/users",{            
             username:userData.username,
             password:userData.password,
@@ -57,6 +57,7 @@ export async function registerUser(userData: formRegistration){
             return result.data as errorResponse
         }
     } catch (error: unknown) {
+        console.log('Unable to register')
         if (axios.isAxiosError(error)) {
             return error.response?.data
         }
@@ -112,6 +113,26 @@ export async function getURLlist():Promise<API_RESPONSE<recentlyAddedLinksData>>
         
     } catch (error) {
         return {success: false, errorType: "SERVER_ERROR", message: "Unable to connect server. Please try again later"}
+    }
+}
+
+export async function patchURL(urlDetail: linkRegistration, shortURL: string): Promise<API_RESPONSE<recentlyAddedLinksData>> {
+    try {
+        const userCookies = await cookies()
+        const token = userCookies.get('token')
+        const result = await axios.patch(BASE_URL+"/api/url_mapper/"+shortURL.slice(-5),{
+            urlDetail
+        },{
+            headers: {
+                Authorization: token?.value
+            }
+        })
+        if(result.status === 200){
+            return {success: true}
+        }
+        return {success: false, errorType: "VALIDATION_ERROR", data:result.data}
+    } catch (error) {
+        return {success: false, errorType: "SERVER_ERROR",message:"Unable to connect to server. Please try again later"}
     }
 }
 
@@ -200,14 +221,27 @@ export async function linkURLRegistration(userData: userLinkRegistration){
         console.log("Checking Result")
 
         if(result.status === 201) {
-            return { success: true, payload: result.data}
-        }else if(result.status === 400 ){
-            return { success: false, errorType: "VALIDATION_ERROR", data:result.data}
-        } else if(result.status === 401) {
-            return { success: false, errorType: "VALIDATION_ERROR", data:result.data}
+            return { success: true}
         }
+        // }else if(result.status === 400 ){
+        //     return { success: false, errorType: "VALIDATION_ERROR", data:result.data}
+        // } else if(result.status === 401) {
+        //     return { success: false, errorType: "VALIDATION_ERROR", data:result.data}
+        // } else if(result.status === 404) {
+        //     console.log(result.data)
+        //     return { success: false, errorType: "VALIDATION_ERROR", data:result.data}
+        // }
     } catch (error) {
-        console.error('Server Error')
-        return {success: false, errorType:"SERVER_ERROR",message:"Server is not responding"}
+        // Axios handle HTTP response 400, 500 within the catch error scope
+        if(isAxiosError(error) === true){
+            if(error.response?.status === 400 || 401 || 402 || 404){
+                console.log(`The HTTP Response ${error.response?.status}`)
+                console.log(`The error message ${error.response?.data.errors}`)
+                return {success: false, errorType: "VALIDATION_ERROR", data: error.response?.data as errorResponse}
+            }else{
+                return {success: false, errorType: "SERVER_ERROR", message:"Server is not responding. Please try again later"}
+            }
+            // return {success: false, errorType: "SERVER_ERROR", message: 'Server is not responding. '}
+        }
     }
 }

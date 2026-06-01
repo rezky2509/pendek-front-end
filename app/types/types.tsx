@@ -15,7 +15,6 @@ export type userLinkRegistration ={
     is_active: boolean
 }
 
-
 export type apiLoginResponse = {
     data: {
         email: string, 
@@ -37,7 +36,7 @@ export type dashboardMetaData = {
 
 // Return as SINGLE Object
 export type recentlyAddedLinkData = {
-    id: string,
+    _id: string,
     short_url: string,
     long_url: string,
     total_clicks: number,
@@ -54,7 +53,7 @@ export type recentlyAddedLinksData = recentlyAddedLinkData[]
 export function toRecentlyAddedLinks(linksDetails: recentlyAddedLinksData) {
     // The dashboard use this 
     return linksDetails.map((details) => ({
-        id: details.id,
+        id: details._id,
         shorten_url: details.short_url,
         original_url: details.long_url,
         total_click: details.total_clicks,
@@ -72,6 +71,6 @@ export function toRecentlyAddedLinks(linksDetails: recentlyAddedLinksData) {
 // We pre-defined all the possiblility what can happen
 // Using Generics for Payload HAndling 
 export type API_RESPONSE<T> = 
-  | { success: true; payload: T | T[]} 
+  | { success: true; payload?: T | T[]} 
   | { success: false; errorType: 'VALIDATION_ERROR'; data: errorResponse }
   | { success: false; errorType: 'SERVER_ERROR'; message: string }
