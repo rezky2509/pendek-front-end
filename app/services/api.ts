@@ -116,17 +116,21 @@ export async function getURLlist():Promise<API_RESPONSE<recentlyAddedLinksData>>
     }
 }
 
-export async function patchURL(urlDetail: linkRegistration, shortURL: string): Promise<API_RESPONSE<recentlyAddedLinksData>> {
+export async function patchURL(urlDetail: linkRegistration, urlID: string): Promise<API_RESPONSE<recentlyAddedLinksData>> {
     try {
+        console.log(`The url id ${urlID}`)
         const userCookies = await cookies()
         const token = userCookies.get('token')
-        const result = await axios.patch(BASE_URL+"/api/url_mapper/"+shortURL.slice(-5),{
-            urlDetail
+        const result = await axios.patch(BASE_URL+"/api/url_mapper/"+urlID,{
+            long_url: urlDetail.long_url,
+            description: urlDetail.description,
+            is_active: urlDetail.is_active
         },{
             headers: {
                 Authorization: token?.value
             }
         })
+        console.info(result.data)
         if(result.status === 200){
             return {success: true}
         }
@@ -243,5 +247,22 @@ export async function linkURLRegistration(userData: userLinkRegistration){
             }
             // return {success: false, errorType: "SERVER_ERROR", message: 'Server is not responding. '}
         }
+    }
+}
+
+export async function deleteLink(link_id: string):Promise<API_RESPONSE>{
+    try {
+        const userCookies = await cookies()
+        const token = userCookies.get('token')?.value
+        const result = await axios.delete(BASE_URL+"/api/url_mapper/"+link_id,{
+            headers: {
+                Authorization: token
+            }
+        })
+        if(result.status === 204){
+            return {success: true}
+        }
+    } catch (error) {
+        
     }
 }

@@ -1,10 +1,13 @@
+// THIS IS THE MIDDLEWARE
+// https://nextjs.org/docs/app/api-reference/file-conventions/proxy
+
 // Middleware for token verification
 // Must be store within the main folder 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { isTokenValid } from "./app/services/api";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl
     const token = request.cookies.get('token')?.value
 

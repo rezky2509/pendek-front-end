@@ -12,6 +12,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 // Modal Component
 import ModalFormURL from '@/components/ModalFormURL';
 import EditModal from '@/components/editModal';
+import DeleteModal from '@/components/deleteModal';
 
 const Page = () => {    
 
@@ -22,6 +23,10 @@ const Page = () => {
     const [isModalOpenAddNewURL,setIsModalOpenAddNewURL] = useState<boolean>(false)
 
     const [isModalOpenEditURL,setIsModalOpenEditURL] = useState<boolean>(false)
+
+    const [isModalDeleteURL,setIsModalOpenDeleteURL] = useState<boolean>(false)
+
+    const [payloadDelete, setPayloadDelete] = useState<recentlyAddedLinkData | undefined>(undefined)
 
     const [getListsURL,setGetListsURL] = useState<API_RESPONSE<recentlyAddedLinksData>| null>(null)
 
@@ -79,14 +84,20 @@ const Page = () => {
                             <tbody>
                                 {getListsURL?.payload.data.map((link: recentlyAddedLinkData)=>(
                                     <tr key={link._id}>
-                                        <td onClick={()=>{
-                                            console.log('Inserting to useState Selected Link')
-                                            setIsModalOpenEditURL(true)
-                                            setSelectedLink(link)
+                                        <td className='flex flex-auto'>
+                                            <Pencil
+                                            onClick={()=>{
+                                                console.log('Inserting to useState Selected Link')
+                                                setIsModalOpenEditURL(true)
+                                                setSelectedLink(link)
                                             }} 
-                                            className='flex flex-auto'>
-                                            <Pencil className='h-5 mr-5 mt-1'/>
-                                            {/* <Trash2/></td> */}
+                                             className='h-5 mr-5 mt-1 cursor-pointer'/>
+                                            <Trash2 
+                                            onClick={()=>{
+                                                setIsModalOpenDeleteURL(true)
+                                                setPayloadDelete(link)
+                                            }} 
+                                            className='cursor-pointer'/>
                                         </td>
                                         <td className='font-bold'><Link target='_blank' href={link.short_url} >{link.short_url}</Link></td>
                                         <td>{link.long_url}</td>
@@ -116,6 +127,18 @@ const Page = () => {
                             }} 
                             urlDetail={selectedLink}/>  
                         }
+
+                        {/* Guar Rendered */}
+                        {isModalDeleteURL && payloadDelete ? (
+                            <DeleteModal
+                                isOpen={isModalDeleteURL}
+                                onClose={() => {
+                                    setIsModalOpenDeleteURL(false)
+                                    setPayloadDelete(undefined)
+                                }}
+                                payload={payloadDelete}
+                            />
+                        ) : null}
                 </section>
 
             </main >

@@ -19,9 +19,6 @@ interface ModalProps {
 
 
 const EditModal: React.FC<ModalProps> = ({isOpen,onClose,urlDetail}) => {
-    console.log(`Logging from edit modal component. `)
-    console.log(urlDetail)
-
         // disable button during process
     const [isSubmitting,setIsSubmitting] = useState<boolean>(false)
         // Modal animation  
@@ -47,7 +44,7 @@ const EditModal: React.FC<ModalProps> = ({isOpen,onClose,urlDetail}) => {
         long_url: urlDetail.long_url,
         description: urlDetail.description,
         is_active: urlDetail.is_active,
-        short_url: urlDetail.short_url
+        url_id: urlDetail._id
       })
       return () => clearTimeout(timer);
     } else {
@@ -71,7 +68,7 @@ const EditModal: React.FC<ModalProps> = ({isOpen,onClose,urlDetail}) => {
                     long_url: data.long_url,
                     description: data.description,
                     is_active: data.is_active
-                },data.short_url)
+                },urlDetail._id)
             if(result?.success === true){
                 setIsLoading(false)
                 setIsSubmitting(false)

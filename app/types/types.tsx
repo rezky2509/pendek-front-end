@@ -70,7 +70,9 @@ export function toRecentlyAddedLinks(linksDetails: recentlyAddedLinksData) {
 // Return as one type but we had pre-defined the type and compiled into one type 
 // We pre-defined all the possiblility what can happen
 // Using Generics for Payload HAndling 
-export type API_RESPONSE<T> = 
+
+// The generic <T = undefined> sets a default. 
+export type API_RESPONSE<T = undefined> = 
   | { success: true; payload?: T | T[]} 
   | { success: false; errorType: 'VALIDATION_ERROR'; data: errorResponse }
   | { success: false; errorType: 'SERVER_ERROR'; message: string }
