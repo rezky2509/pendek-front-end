@@ -17,8 +17,8 @@ import { loginFormValidation } from '../validation/loginValidation';
 import { apiLoginResponse, dashboardMetaData, errorResponse, API_RESPONSE, recentlyAddedLinksData, userLinkRegistration } from '../types/types';
 import { linkRegistration } from '../validation/linkRegistrationValidation';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-// const BASE_URL = process.env.NEXT_AWS_EC2_BASE_URL;
+// const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const BASE_URL = process.env.NEXT_AWS_EC2_BASE_URL;
 
 
 export async function apiStatus(){
@@ -107,9 +107,9 @@ export async function getURLlist():Promise<API_RESPONSE<recentlyAddedLinksData>>
         if(result.status === 200){
             // not suitable using type API_RESPONSE
             // It need to return the data as well
-            return {success: true, payload: result.data}
+            return {success: true, payload: result.data.data}
         }
-        return {success: false, errorType: "VALIDATION_ERROR", data: result.data as errorResponse}
+        return {success: false, errorType: "VALIDATION_ERROR", data: result.data.data as errorResponse}
         
     } catch (error) {
         return {success: false, errorType: "SERVER_ERROR", message: "Unable to connect server. Please try again later"}
@@ -141,7 +141,7 @@ export async function patchURL(urlDetail: linkRegistration, urlID: string): Prom
 }
 
 // Calling Dashboard Metadata
-export async function dashboardData(){
+export async function dashboardData():Promise<API_RESPONSE<dashboardMetaData>>{
         try {
         const userCookies = await cookies()
         const token = userCookies.get('token')?.value
@@ -151,15 +151,21 @@ export async function dashboardData(){
             }
         })
         if (result.status === 200) {
-            // console.log(result.data)
-            return result.data
+            // The .data and .data. The first is from axios and second chaining is from API response
+            return {success:true, payload: result.data.data}
         }
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
-            return error.response?.data
+            // return error.response?.data
+            return {success: false, errorType: "SERVER_ERROR", message:'Unable to reach server. Please try again'}
+        }else if(! axios.isAxiosError(error)){
+            // Validation Error 
+            return {success: false, errorType:"VALIDATION_ERROR"}
         }
-        return false
+        
     }
+
+    return {success: false, errorType:"SERVER_ERROR",message:"Please Try again later"}
 }
 
 // Logging Out (Calling the API to delete the token and the cookies)
@@ -250,19 +256,19 @@ export async function linkURLRegistration(userData: userLinkRegistration){
     }
 }
 
-export async function deleteLink(link_id: string):Promise<API_RESPONSE>{
-    try {
-        const userCookies = await cookies()
-        const token = userCookies.get('token')?.value
-        const result = await axios.delete(BASE_URL+"/api/url_mapper/"+link_id,{
-            headers: {
-                Authorization: token
-            }
-        })
-        if(result.status === 204){
-            return {success: true}
-        }
-    } catch (error) {
+// export async function deleteLink(link_id: string):Promise<API_RESPONSE>{
+//     try {
+//         const userCookies = await cookies()
+//         const token = userCookies.get('token')?.value
+//         const result = await axios.delete(BASE_URL+"/api/url_mapper/"+link_id,{
+//             headers: {
+//                 Authorization: token
+//             }
+//         })
+//         if(result.status === 204){
+//             return {success: true}
+//         }
+//     } catch (error) {
         
-    }
-}
+//     }
+// }

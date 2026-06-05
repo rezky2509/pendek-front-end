@@ -82,10 +82,10 @@ const DeleteModal: React.FC<ModalProps> = ({isOpen, onClose, payload}) => {
                     {/* <Form action={''}> */}
                     <div className="grid grid-cols-1">
                         <div className="grid-cols-1">
-                            <h1 className=''>You are about to delete the long url of <span className='font-bold'>{payload.long_url}</span></h1>
+                            <h1 className=''>You are about to delete the long url of <span className='font-bold'>{payload?.long_url}</span></h1>
                         </div>
                         <div className="grid-cols-1 pt-5">
-                            <h3 className=''>With the description of  <span className='font-bold'>{payload.description}</span></h3>
+                            <h3 className=''>With the description of  <span className='font-bold'>{payload?.description}</span></h3>
                         </div>
                     </div>
                         <div className="flex items-center space-x-4 border-t border-default pt-4 md:pt-6">

@@ -4,7 +4,7 @@ import FooterDashboard from '@/components/footerDasboard';
 import Sidebar from '@/components/Sidebar'
 import { useEffect, useState } from 'react';
 import { dashboardData } from '../services/api';
-import { dashboardMetaData, recentlyAddedLinkData, recentlyAddedLinksData } from '../types/types';
+import { API_RESPONSE, dashboardMetaData, recentlyAddedLinkData, recentlyAddedLinksData } from '../types/types';
 
 const date: Date = new Date();
 
@@ -24,23 +24,33 @@ const DashboardPage = () => {
 
     // RE-WRITE THIS
     async function dashboardDataDetails() {
-        const result = await dashboardData()
-        if (!result || typeof result === 'boolean') {
-            console.error('Failed to load dashboard data', result)
-            alert('Unable to fetch data from server. Please try again')
-            return
+        const result = await dashboardData() as API_RESPONSE<dashboardMetaData>
+        if(result.success === false){
+            alert(result.errorType)
+        }else{
+            console.log(result.payload)
+            const dashboardData = result.payload as dashboardMetaData
+            console.info(dashboardData)
+            setDashboarDetails({
+                total_clicks: dashboardData.total_clicks || "0",
+                total_active_links: dashboardData.total_active_links || "0",
+                most_clicks_link: dashboardData.most_clicks_link || "N/A",
+                // IF the recently added links is an array store as not array
+                recently_added_links: Array.isArray(dashboardData.recently_added_links) ? dashboardData.recently_added_links : []
+            })
         }
-        const payload = (result as any)?.data ?? result
+        // const payload = (result as recentlyAddedLinksData)?.data ?? result
+        // const dataDashboard = result.payload.data as dashboardMetaData
         // console.log('API valid')
         // console.log('Full payload:', payload)
         // console.log('Recently added:', payload.recently_added_links)
-        setDashboarDetails({
-            total_clicks: payload.total_clicks || "0",
-            total_active_links: payload.total_active_links || "0",
-            most_clicks_link: payload.most_clicks_link || "N/A",
-            // IF the recently added links is an array store as not array
-            recently_added_links: Array.isArray(payload.recently_added_links) ? payload.recently_added_links : []
-        })
+    //     setDashboarDetails({
+    //         total_clicks: dashboardData.total || "0",
+    //         total_active_links: payload.total_active_links || "0",
+    //         most_clicks_link: payload.most_clicks_link || "N/A",
+    //         // IF the recently added links is an array store as not array
+    //         recently_added_links: Array.isArray(payload.recently_added_links) ? payload.recently_added_links : []
+    //     })
     }
 
     
@@ -60,15 +70,18 @@ const DashboardPage = () => {
                         <h1 className="section-title">Dasboard</h1>
                         <div style={{ fontSize: '12px', fontWeight: 700 }}>{date.toDateString()}</div>
                     </div>
+                    <h1>The raw daata</h1>
+                    {JSON.stringify(dashboardDataDetails)}
+
 
                     <div className="stats-grid">
                         <div className="stat-card">
                             <span className="stat-label">Total Active Clicks</span>
-                            <div className="stat-value">{dashboardDetails?.total_clicks}</div>
+                            <div className="stat-value">{dashboardDetails.total_clicks}</div>
                         </div>
                         <div className="stat-card">
                             <span className="stat-label">Active Links</span>
-                            <div className="stat-value">{dashboardDetails?.total_active_links}</div>
+                            <div className="stat-value">{dashboardDetails.total_active_links}</div>
                         </div>
                         <div className="stat-card">
                             <span className="stat-label">Top Performer</span>
@@ -88,9 +101,9 @@ const DashboardPage = () => {
                             </thead>
                             <tbody>
                                 {dashboardDetails.recently_added_links?.map((link: recentlyAddedLinkData) => (
-                                    <tr key={link.id}>
-                                        <td><span className="short-url">{link.shorten_url}</span></td>
-                                        <td><span className="long-url">{link.original_url}</span></td>
+                                    <tr key={link._id}>
+                                        <td><span className="short-url">{link.short_url}</span></td>
+                                        <td><span className="long-url">{link.long_url}</span></td>
                                         <td>{link.total_clicks.toLocaleString()}</td>
                                         <td>
                                             <span className={`tag ${link.is_active ? 'active' : 'false'}`}>

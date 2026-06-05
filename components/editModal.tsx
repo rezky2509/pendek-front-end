@@ -155,9 +155,9 @@ const EditModal: React.FC<ModalProps> = ({isOpen,onClose,urlDetail}) => {
                                 {isLoading ?                             
                                     <div className='flex items-center gap-5'>
                                         <LoaderCircle className='animate-spin'/>
-                                        <div className='ease-linear'>Creating</div>
+                                        <div className='ease-linear'>Editing</div>
                                     </div>:
-                                    <span className=''>Create</span> 
+                                    <span className=''>Edit</span> 
                                 }
                             </button>
                         </div>

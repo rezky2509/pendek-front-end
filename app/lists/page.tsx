@@ -4,10 +4,10 @@ import DashboardHeader from '@/components/dashboardHeader';
 import Sidebar from '@/components/Sidebar';
 import { useEffect, useState } from 'react';
 import { getURLlist } from '../services/api';
-import { API_RESPONSE, recentlyAddedLinkData, recentlyAddedLinksData} from '../types/types';
+import { API_RESPONSE, recentlyAddedLinkData, recentlyAddedLinksData, toRecentlyAddedLinks} from '../types/types';
 import Link from 'next/link';
 import { useTimeAgo } from 'next-timeago';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Rss, Trash2 } from 'lucide-react';
 
 // Modal Component
 import ModalFormURL from '@/components/ModalFormURL';
@@ -28,17 +28,21 @@ const Page = () => {
 
     const [payloadDelete, setPayloadDelete] = useState<recentlyAddedLinkData | undefined>(undefined)
 
-    const [getListsURL,setGetListsURL] = useState<API_RESPONSE<recentlyAddedLinksData>| null>(null)
+    const [getListsURL,setGetListsURL] = useState<recentlyAddedLinksData>([])
 
     // Selected Link
     const [selectedLink, setSelectedLink] = useState<recentlyAddedLinkData | undefined>(undefined)
 
     const getURLList = async() => {
-        const result = await getURLlist()
+        const result = await getURLlist() as API_RESPONSE<recentlyAddedLinksData>
         if(result.success === true){
             console.info('API Fetch Success')
-            console.info(result)
-            setGetListsURL(result)
+            // console.info(result.payload)
+            // Check if it return as an array or not 
+            // Store it as an array to recentlyAddedLinksData else just store it as an empty array
+            const listsURL = Array.isArray(result.payload) ? result.payload : [] as recentlyAddedLinksData[]
+            setGetListsURL((listsURL) as recentlyAddedLinksData)
+
         } else if(result.success === false){
             alert('Bad Request')
         }else{
@@ -82,7 +86,7 @@ const Page = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {getListsURL?.payload.data.map((link: recentlyAddedLinkData)=>(
+                            {getListsURL.map((link: recentlyAddedLinkData)=>(
                                     <tr key={link._id}>
                                         <td className='flex flex-auto'>
                                             <Pencil
@@ -112,6 +116,7 @@ const Page = () => {
                                     </tr>
                                     
                                 ))}
+
                             </tbody>
                         </table>
                     </div>

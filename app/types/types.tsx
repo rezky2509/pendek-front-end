@@ -53,7 +53,7 @@ export type recentlyAddedLinksData = recentlyAddedLinkData[]
 export function toRecentlyAddedLinks(linksDetails: recentlyAddedLinksData) {
     // The dashboard use this 
     return linksDetails.map((details) => ({
-        id: details._id,
+        _id: details._id,
         shorten_url: details.short_url,
         original_url: details.long_url,
         total_click: details.total_clicks,
@@ -74,5 +74,5 @@ export function toRecentlyAddedLinks(linksDetails: recentlyAddedLinksData) {
 // The generic <T = undefined> sets a default. 
 export type API_RESPONSE<T = undefined> = 
   | { success: true; payload?: T | T[]} 
-  | { success: false; errorType: 'VALIDATION_ERROR'; data: errorResponse }
+  | { success: false; errorType: 'VALIDATION_ERROR'; data?: errorResponse }
   | { success: false; errorType: 'SERVER_ERROR'; message: string }
