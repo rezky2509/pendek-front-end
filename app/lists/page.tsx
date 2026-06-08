@@ -72,10 +72,10 @@ const Page = () => {
                     </div>
                     {/* Modal Component Go here */}
                     <ModalFormURL isOpen={isModalOpenAddNewURL} 
+                        onSuccess={()=>getURLList()}
                         onClose={()=>{
                             // When close, refresh the list
                             setIsModalOpenAddNewURL(false)
-                            getURLList()
                         }
                     }/>
                     <div className="table-container">
@@ -135,9 +135,11 @@ const Page = () => {
                                 setIsModalOpenEditURL(false)
                                 // Reset the modal props
                                 setSelectedLink(undefined)
+                            }} 
+                            onSuccess={()=> {
                                 // When close, refresh the list
                                 getURLList()
-                            }} 
+                            }}
                             urlDetail={selectedLink}/>  
                         }
 
@@ -148,9 +150,10 @@ const Page = () => {
                                 onClose={() => {
                                     setIsModalOpenDeleteURL(false)
                                     setPayloadDelete(undefined)
-                                    // When close, refresh the list
-                                    getURLList()
+  
                                 }}
+                                // When close, refresh the list
+                                onSuccess={()=>getURLList()}
                                 payload={payloadDelete}
                             />
                         ) : null}

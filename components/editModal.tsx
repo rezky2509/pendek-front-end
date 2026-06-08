@@ -14,11 +14,12 @@ interface ModalProps {
     isOpen: boolean,
     // This onclose is just reverting the boolean value does not return any value
     onClose: ()=> void,
+    onSuccess: ()=> void,
     urlDetail: recentlyAddedLinkData
 }
 
 
-const EditModal: React.FC<ModalProps> = ({isOpen,onClose,urlDetail}) => {
+const EditModal: React.FC<ModalProps> = ({isOpen,onClose,urlDetail,onSuccess}) => {
         // disable button during process
     const [isSubmitting,setIsSubmitting] = useState<boolean>(false)
         // Modal animation  
@@ -75,6 +76,7 @@ const EditModal: React.FC<ModalProps> = ({isOpen,onClose,urlDetail}) => {
                 // revert the boolean value to true. 
                 // Previously it was set to false
                 onClose()
+                onSuccess()
             }else{
                 // Here implement toast when the server not responding.
                 alert("Server Not responding")
@@ -93,7 +95,7 @@ const EditModal: React.FC<ModalProps> = ({isOpen,onClose,urlDetail}) => {
         onClick={onClose}>
         <div className="flex justify-center items-center fixed inset-0 bg-gray-900/50 dark:bg-gray-900/80"
         onClick={(e)=>{e.stopPropagation()}}>
-            <div className="relative p-4 w-full max-w-xl max-h-full bg-fuchsia-50">
+            <div className="overflow-y-auto relative p-4 w-full max-w-xl max-h-full bg-fuchsia-50">
                 {/* <!-- Modal content --> */}
                 <div className="relative bg-neutral-primary-soft border border-default rounded-base shadow-sm p-4 md:p-6">
                     {/* <!-- Modal header --> */}

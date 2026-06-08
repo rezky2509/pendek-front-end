@@ -8,14 +8,15 @@ import { deleteLink } from '@/app/services/api'
 interface ModalProps {
     isOpen: boolean,
     // Reverting boolean values
-    onClose: ()=>void
+    onClose: ()=>void,
+    onSuccess: ()=>void,
     // Not to be confuse with short url, but the id of the short url
     // Why optional ? because the data from the API response could be undefined. 
     payload?: recentlyAddedLinkData
 }
 
 // FC is react functional Component
-const DeleteModal: React.FC<ModalProps> = ({isOpen, onClose, payload}) => {
+const DeleteModal: React.FC<ModalProps> = ({isOpen, onClose, payload,onSuccess}) => {
 // disable button during process
     const [isSubmitting,setIsSubmitting] = useState<boolean>(false)
         // Modal animation  
@@ -49,6 +50,7 @@ const DeleteModal: React.FC<ModalProps> = ({isOpen, onClose, payload}) => {
             setIsLoading(false)
             setIsSubmitting(false)
             onClose()
+            onSuccess()
         }else{
             alert('Internal Server Error. Please try again later')
         }

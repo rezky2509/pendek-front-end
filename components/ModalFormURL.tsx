@@ -12,10 +12,13 @@ import { linkURLRegistration } from '@/app/services/api'
 interface ModalProps {
     isOpen: boolean,
     // This onclose is just reverting the boolean value does not return any value
-    onClose: ()=> void
+    onClose: ()=> void,
+    // Call the urllist once the api call is sucess
+    // run whatever function within this function definition. 
+    onSuccess: ()=> void
 }
 
-const ModalFormURL: React.FC<ModalProps> = ({isOpen, onClose}) => {
+const ModalFormURL: React.FC<ModalProps> = ({isOpen, onClose, onSuccess}) => {
     // IF the props recieve as isOpen false 
     const [isLoading,setIsLoading] = useState<boolean>(false)
 
@@ -53,6 +56,8 @@ const ModalFormURL: React.FC<ModalProps> = ({isOpen, onClose}) => {
                 // revert the boolean value to true. 
                 // Previously it was set to false
                 onClose()
+                // set to call onSucess function
+                onSuccess()
             }else{
                 // setErrorMessage(result?.message)
                 // Here implement toast when the server not responding.
@@ -90,7 +95,7 @@ const ModalFormURL: React.FC<ModalProps> = ({isOpen, onClose}) => {
           isAnimated ? 'opacity-100' : 'opacity-0'
         }`} >
         <div className="flex justify-center items-center fixed inset-0 bg-gray-900/50 dark:bg-gray-900/80">
-            <div className="relative p-4 w-full max-w-md max-h-full bg-fuchsia-50">
+            <div className="relative p-4 w-full max-w-md max-h-full overflow-y-auto bg-fuchsia-50">
                 {/* <!-- Modal content --> */}
                 <div className="relative bg-neutral-primary-soft border border-default rounded-base shadow-sm p-4 md:p-6">
                     {/* <!-- Modal header --> */}
