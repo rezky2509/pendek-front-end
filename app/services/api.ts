@@ -17,8 +17,8 @@ import { loginFormValidation } from '../validation/loginValidation';
 import { apiLoginResponse, dashboardMetaData, errorResponse, API_RESPONSE, recentlyAddedLinksData, userLinkRegistration } from '../types/types';
 import { linkRegistration } from '../validation/linkRegistrationValidation';
 
-// const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-const BASE_URL = process.env.NEXT_AWS_EC2_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+// const BASE_URL = process.env.NEXT_AWS_EC2_BASE_URL;
 
 
 export async function apiStatus(){
@@ -256,19 +256,20 @@ export async function linkURLRegistration(userData: userLinkRegistration){
     }
 }
 
-// export async function deleteLink(link_id: string):Promise<API_RESPONSE>{
-//     try {
-//         const userCookies = await cookies()
-//         const token = userCookies.get('token')?.value
-//         const result = await axios.delete(BASE_URL+"/api/url_mapper/"+link_id,{
-//             headers: {
-//                 Authorization: token
-//             }
-//         })
-//         if(result.status === 204){
-//             return {success: true}
-//         }
-//     } catch (error) {
-        
-//     }
-// }
+export async function deleteLink(link_id: string){
+    console.log(`The url ID is ${link_id}`)
+    try {
+        const userCookies = await cookies()
+        const token = userCookies.get('token')?.value
+        const result = await axios.delete(BASE_URL+"/api/url_mapper/"+link_id,{
+            headers: {
+                Authorization: token
+            }
+        })
+        if(result.status === 204){
+            return {success: true}
+        }
+    } catch (error) {
+        return {success:false, errorType: "Server Error", data: "ERROR"}
+    }   
+}

@@ -2,6 +2,7 @@ import { LoaderCircle,X, CircleAlert } from 'lucide-react'
 import Form from 'next/form'
 import { useEffect, useState } from 'react'
 import { recentlyAddedLinkData } from '@/app/types/types'
+import { deleteLink } from '@/app/services/api'
 
 // Type props definition
 interface ModalProps {
@@ -43,6 +44,14 @@ const DeleteModal: React.FC<ModalProps> = ({isOpen, onClose, payload}) => {
         console.log(`Deleting`)
         setIsLoading(true)
         setIsSubmitting(true)
+        const resultAPI = await deleteLink(payload._id)
+        if(resultAPI?.success === true){
+            setIsLoading(false)
+            setIsSubmitting(false)
+            onClose()
+        }else{
+            alert('Internal Server Error. Please try again later')
+        }
     }
 
     // Just reminder 

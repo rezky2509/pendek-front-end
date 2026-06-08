@@ -101,7 +101,7 @@ const DashboardPage = () => {
                             </thead>
                             <tbody>
                                 {dashboardDetails.recently_added_links?.map((link: recentlyAddedLinkData) => (
-                                    <tr key={link._id}>
+                                    <tr key={link.id}>
                                         <td><span className="short-url">{link.short_url}</span></td>
                                         <td><span className="long-url">{link.long_url}</span></td>
                                         <td>{link.total_clicks.toLocaleString()}</td>
