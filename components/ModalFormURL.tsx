@@ -33,9 +33,15 @@ const ModalFormURL: React.FC<ModalProps> = ({isOpen, onClose, onSuccess}) => {
     })
 
     // Form Handler 
-    const {register, handleSubmit, formState: {errors}} = useForm<linkRegistration>({
+    // register the input fied
+    // handleSubit field to collect all the input field 
+    // reset to handle resetting input field upon success api request and response. 
+    const {register, handleSubmit, formState: {errors},reset} = useForm<linkRegistration>({
         // Resolver 
-        resolver: zodResolver(schemaLinkRegistration)
+        resolver: zodResolver(schemaLinkRegistration),
+        defaultValues:{
+            is_active:true
+        }
     })
 
 
@@ -47,7 +53,9 @@ const ModalFormURL: React.FC<ModalProps> = ({isOpen, onClose, onSuccess}) => {
         setIsLoading(true)
         setIsSubmitting(true)        
         console.log('Checking input validation')
+        console.info(data)
         const validation = schemaLinkRegistration.safeParse(data)
+        console.log(validation.data?.is_active)
         if(validation.success){
             const result = await linkURLRegistration(data)
             if(result?.success === true){
@@ -55,19 +63,25 @@ const ModalFormURL: React.FC<ModalProps> = ({isOpen, onClose, onSuccess}) => {
                 setIsSubmitting(false)
                 // revert the boolean value to true. 
                 // Previously it was set to false
-                onClose()
+                // onClose()
                 // set to call onSucess function
                 onSuccess()
+                // Reset form to be empty when success 
+                reset({
+                    long_url:'',
+                    description: '',
+                    is_active: true
+                })
             }else{
                 // setErrorMessage(result?.message)
-                // Here implement toast when the server not responding.
+                setErrorMessage({
+                        errors: result!.data!.errors
+                    })
+                }
             }
             setIsLoading(false)
             setIsSubmitting(false)
-            setErrorMessage({
-                errors: !result?.data?.errors
-            })
-        }
+
         return false
     }
 
@@ -122,15 +136,16 @@ const ModalFormURL: React.FC<ModalProps> = ({isOpen, onClose, onSuccess}) => {
                             </div>
                             <div className="col-span-3">
                                 <label className="block mb-2.5 text-sm font-medium text-heading">Short URL Link Activation Status</label>
-                                <select {...register('is_active',{
+                                <select
+                                    {...register('is_active',{
                                     required:true,
                                     // Set value convert the value as booleans
                                     // allows you to transform or mutate an input's value before it is sent to the form state
                                     // Mutate the value type 
-                                    setValueAs: (value) => value == 'true'
+                                    setValueAs: (value) => value == 'true' || value == true
                                     } )} className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs">
-                                    <option value='true' defaultChecked>Active</option>
-                                    <option value='false'>Not Active</option>
+                                    <option value="true" defaultChecked>Active</option>
+                                    <option value="false">Not Active</option>
                                 </select>
                                 {errors.is_active && <span className='text-red-500 mt-5'>{errors.is_active.message}</span>}                
                             </div>

@@ -7,12 +7,21 @@ import { getURLlist } from '../services/api';
 import { API_RESPONSE, recentlyAddedLinkData, recentlyAddedLinksData, toRecentlyAddedLinks} from '../types/types';
 import Link from 'next/link';
 import { useTimeAgo } from 'next-timeago';
-import { Pencil, Rss, Trash2 } from 'lucide-react';
+import { Pencil, Trash2, QrCode } from 'lucide-react';
+
+// Toast Animation
+import toast,{Toaster} from 'react-hot-toast'
 
 // Modal Component
 import ModalFormURL from '@/components/ModalFormURL';
 import EditModal from '@/components/editModal';
 import DeleteModal from '@/components/deleteModal';
+
+
+type crudOperation = 
+| {operation: "Edit"}
+| {operation: "Delete"}
+| {operation: "Create"}
 
 const Page = () => {    
 
@@ -42,13 +51,20 @@ const Page = () => {
             // Store it as an array to recentlyAddedLinksData else just store it as an empty array
             const listsURL = Array.isArray(result.payload) ? result.payload : [] as recentlyAddedLinksData[]
             setGetListsURL((listsURL) as recentlyAddedLinksData)
-
         } else if(result.success === false){
             alert('Bad Request')
         }else{
             // Later add toast
             alert('No data')
         }  
+    }
+
+    const setToast = ({operation}: crudOperation) => {
+        console.log('Toast Run')
+        toast.success(`Your URL ${operation} is success`,{
+            icon: '✌️',
+            removeDelay: 2000
+        })
     }
     // Flowbite Installation error
     // https://github.com/themesberg/flowbite-react/issues/1620
@@ -72,7 +88,11 @@ const Page = () => {
                     </div>
                     {/* Modal Component Go here */}
                     <ModalFormURL isOpen={isModalOpenAddNewURL} 
-                        onSuccess={()=>getURLList()}
+                        onSuccess={()=>{
+                            getURLList()
+                            setToast({operation: "Create"})
+                        }
+                        }
                         onClose={()=>{
                             // When close, refresh the list
                             setIsModalOpenAddNewURL(false)
@@ -108,8 +128,9 @@ const Page = () => {
                                                 setPayloadDelete(link)
                                             }} 
                                             className='cursor-pointer'/>
+                                            <QrCode className='ml-5 cursor-pointer'/>
                                         </td>
-                                        <td className='font-bold'><Link target='_blank' href={link.short_url} >{link.short_url}</Link></td>
+                                        <td className='font-bold'><Link target='_blank' onClick={()=>getListsURL} href={link.short_url} >{link.short_url}</Link></td>
                                         <td>{link.long_url}</td>
                                         <td>{link.total_clicks}</td>
                                         <td>{link.description}</td>
@@ -139,6 +160,7 @@ const Page = () => {
                             onSuccess={()=> {
                                 // When close, refresh the list
                                 getURLList()
+                                setToast({operation: "Edit"})
                             }}
                             urlDetail={selectedLink}/>  
                         }
@@ -153,12 +175,16 @@ const Page = () => {
   
                                 }}
                                 // When close, refresh the list
-                                onSuccess={()=>getURLList()}
+                                onSuccess={()=>{
+                                    getURLList()
+                                    setToast({operation:"Delete"})
+                                }}
                                 payload={payloadDelete}
                             />
                         ) : null}
                 </section>
-
+                <Toaster 
+                position='bottom-center'/>
             </main >
         </>
     );

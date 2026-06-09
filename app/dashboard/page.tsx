@@ -21,16 +21,15 @@ const DashboardPage = () => {
         most_clicks_link: 'Loading',
         recently_added_links:[]
     })
-
+    
     // RE-WRITE THIS
     async function dashboardDataDetails() {
         const result = await dashboardData() as API_RESPONSE<dashboardMetaData>
         if(result.success === false){
-            alert(result.errorType)
+            // alert(result.errorType)
         }else{
             console.log(result.payload)
             const dashboardData = result.payload as dashboardMetaData
-            console.info(dashboardData)
             setDashboarDetails({
                 total_clicks: dashboardData.total_clicks || "0",
                 total_active_links: dashboardData.total_active_links || "0",

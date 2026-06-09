@@ -74,5 +74,5 @@ export function toRecentlyAddedLinks(linksDetails: recentlyAddedLinksData) {
 // The generic <T = undefined> sets a default. 
 export type API_RESPONSE<T = undefined> = 
   | { success: true; payload?: T | T[]} 
-  | { success: false; errorType: 'VALIDATION_ERROR'; data?: errorResponse }
+  | { success: false; errorType: 'VALIDATION_ERROR'; data: errorResponse }
   | { success: false; errorType: 'SERVER_ERROR'; message: string }

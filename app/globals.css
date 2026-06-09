@@ -377,7 +377,7 @@ footer {
     display: block;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 698px) {
     .hero-text {
         font-size: 10vw;
     }
