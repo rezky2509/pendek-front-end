@@ -114,17 +114,17 @@ const EditModal: React.FC<ModalProps> = ({isOpen,onClose,urlDetail,onSuccess}) =
                             <div className="col-span-2">
                                 <label className="block mb-2.5 text-sm font-medium text-heading">Short URL</label>
                                 <div className="text-heading text-md block w-full px-3 font-heavy"/> {urlDetail.short_url}
-                                {/* {errors.long_url && <span className='text-red-500 mt-5'>{errors.long_url.message}</span>} */}
+                                {errors.long_url && <span className='text-red-500 mt-5'>{errors.long_url.message}</span>} 
                             </div>
                             <div className="col-span-2">
                                 <label className="block mb-2.5 text-sm font-medium text-heading">Long URL</label>
                                 <input type="text" placeholder='www.google.com' {...register('long_url',{required:true})} className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"/>
-                                {/* {errors.long_url && <span className='text-red-500 mt-5'>{errors.long_url.message}</span>} */}
+                                {errors.long_url && <span className='text-red-500 mt-5'>{errors.long_url.message}</span>} 
                             </div>
                             <div className="col-span-2">
                                 <label className="block mb-2.5 text-sm font-medium text-heading">Description</label>
                                 <textarea {...register('description',{required:true})} id="description" rows={4} className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full p-3.5 shadow-xs placeholder:text-body" placeholder="Description here"></textarea>    
-                                {/* {errors.description && <span className='text-red-500 mt-5'>{errors.description.message}</span>}                 */}
+                                {errors.description && <span className='text-red-500 mt-5'>{errors.description.message}</span>}                
                             </div>
                             <div className="col-span-3">
                                 <label className="block mb-2.5 text-sm font-medium text-heading">Short URL Link Activation Status</label>

@@ -24,8 +24,21 @@ export type apiLoginResponse = {
 }
 
 export type errorResponse = {
-    errors:string
+    errors:{
+        username?: string,
+        email?: string,
+        serverError?: string,
+    }
 }
+
+export type errorAddURLResponse = {
+    field: string[],
+    messag: string
+}
+export type errorsAddURLResponse = {
+    errors: errorAddURLResponse[]
+}
+
 
 export type dashboardMetaData = {
     total_clicks: string,
@@ -74,5 +87,5 @@ export function toRecentlyAddedLinks(linksDetails: recentlyAddedLinksData) {
 // The generic <T = undefined> sets a default. 
 export type API_RESPONSE<T = undefined> = 
   | { success: true; payload?: T | T[]} 
-  | { success: false; errorType: 'VALIDATION_ERROR'; data: errorResponse }
+  | { success: false; errorType: 'VALIDATION_ERROR'; data: T }
   | { success: false; errorType: 'SERVER_ERROR'; message: string }

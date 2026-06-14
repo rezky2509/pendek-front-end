@@ -82,11 +82,26 @@ const Page = () => {
         const resultValidate = schemaFormRegistration.safeParse(data)
         if(resultValidate.success){
             const result = await registerUser(resultValidate.data)
-            if(result === true){
+            // if(result === true){
+            //     redirect('/login')
+            // }
+            // else if(result){
+            //     setErrorMessage(result)
+            // }
+            // Need to improvise (either directly to dashboard or need to login)
+            if(result.success === true){
                 redirect('/login')
-            }
-            else if(result){
-                setErrorMessage(result)
+            }else if(result.success === false && result.errorType === 'VALIDATION_ERROR'){
+                console.log('Got Validation Error')
+                setErrorMessage({...result.data})
+            }else if(result.success === false && result.errorType === 'SERVER_ERROR'){
+                // When discriminated union narrows to SERVER_ERROR, result.message is available
+                setErrorMessage({
+                    errors: {
+                        ...errorMessage?.errors,
+                        serverError: result.message
+                    }
+                } as errorResponse)
             }
         }   
     }
@@ -141,7 +156,17 @@ const Page = () => {
                         />
                         <label htmlFor="terms">I accept the terms and condition.</label>
                     </div>
-                    {errorMessage && <span className='text-red-500 mb-2 mt-5'>{ errorMessage.errors }</span>}
+                    {errorMessage && <div className='bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded mb-2 mt-5'>
+                        {errorMessage.errors?.serverError && (
+                            <div className='mb-2 font-semibold'>⚠️ {errorMessage.errors.serverError}</div>
+                        )}
+                        {errorMessage.errors?.username && (
+                            <div className='mb-1'>• {errorMessage.errors.username}</div>
+                        )}
+                        {errorMessage.errors?.email && (
+                            <div>• {errorMessage.errors.email}</div>
+                        )}
+                    </div>}
                     <button type="submit" className="btn-submit" >REGISTER</button>
                     <div className="form-footer">
                         Already have an account? <Link href="/login" className="form-link">LOGIN</Link>

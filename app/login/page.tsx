@@ -4,8 +4,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Form from 'next/form'
 
-// Redirect import 
-import { redirect } from 'next/navigation';
 
 // Form React Handler
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -51,13 +49,24 @@ const Page = () => {
                 router.push('/dashboard')
                 // If error because of fail validation
             } else if (resultApi.success === false && resultApi.errorType === 'VALIDATION_ERROR') {
-                setErrorApiResponse(resultApi.data)
-                setErrorDb(false)
+                console.info(resultApi.data?.errors)
+                // This is not right since it does not give hint
+                if(resultApi.data?.errors){
+                    setErrorApiResponse({
+                        errors:{
+                            username: resultApi.data.errors                        }
+                    })
+                    setIsAuthenticating(false)
+                }
                 setIsAuthenticating(false)
-                // IF the error return as server error
             } else if(resultApi.success === false && resultApi.errorType =='SERVER_ERROR'){
                 setErrorDb(true)
                 setIsAuthenticating(false)
+                setErrorApiResponse({
+                    errors:{
+                        serverError: resultApi.message
+                    }
+                })
             }
             setIsAuthenticating(false)
         }
@@ -91,12 +100,19 @@ const Page = () => {
                             {...register('password',{required: true})   }
                             type="password" id="password" className="form-input" placeholder="••••••••" required />
                         </div>
-                        {apiResponse?.errors && <div className='pt-3 text-red-400'>{apiResponse.errors}</div>}
-
+                        {apiResponse?.errors.username && 
+                        <div className='bg-red-50 border border-red-500 p-5 text-red-600'>
+                            {apiResponse.errors.username}
+                        </div>
+                        }
+                        {apiResponse?.errors.serverError && 
+                        <div className='bg-red-50 border border-red-500 p-5 pt-3 text-red-600'>
+                            {apiResponse.errors.serverError}
+                        </div>
+                        }
                         <button type="submit" className="btn-submit" disabled={isAuthenticating}>
                             {isAuthenticating ? "AUTHENTICATING..." : "LOGIN"}
                         </button>
-                         { errorDb && <div className='pt-3 text-red-400'>Unable to connect to server. Please try again later</div>}
                     </Form>
                 </div>
             </main>

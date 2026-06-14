@@ -29,7 +29,7 @@ const ModalFormURL: React.FC<ModalProps> = ({isOpen, onClose, onSuccess}) => {
     const [isSubmitting,setIsSubmitting] = useState<boolean>(false)
 
     const [errorMessage,setErrorMessage] = useState<errorResponse>({
-        errors:''
+        errors:{}
     })
 
     // Form Handler 
@@ -45,8 +45,6 @@ const ModalFormURL: React.FC<ModalProps> = ({isOpen, onClose, onSuccess}) => {
     })
 
 
-    // https://www.youtube.com/watch?v=GtPPT-qSXj8
-
     // Handling Link Form Registration
     // Using type of submit handler from react-hook-form
     const submitLinkRegistration: SubmitHandler<linkRegistration> = async(data: userLinkRegistration) =>{
@@ -57,13 +55,15 @@ const ModalFormURL: React.FC<ModalProps> = ({isOpen, onClose, onSuccess}) => {
         const validation = schemaLinkRegistration.safeParse(data)
         console.log(validation.data?.is_active)
         if(validation.success){
+            console.log('Sending Request')
             const result = await linkURLRegistration(data)
+            console.info(result)
             if(result?.success === true){
                 setIsLoading(false)
                 setIsSubmitting(false)
                 // revert the boolean value to true. 
                 // Previously it was set to false
-                // onClose()
+                onClose()
                 // set to call onSucess function
                 onSuccess()
                 // Reset form to be empty when success 
@@ -75,7 +75,7 @@ const ModalFormURL: React.FC<ModalProps> = ({isOpen, onClose, onSuccess}) => {
             }else{
                 // setErrorMessage(result?.message)
                 setErrorMessage({
-                        errors: result!.data!.errors
+                        errors: {}
                     })
                 }
             }
@@ -162,7 +162,7 @@ const ModalFormURL: React.FC<ModalProps> = ({isOpen, onClose, onSuccess}) => {
                             {
                                 errorMessage && (
                                 <div className='col-span-1'>
-                                        <h3 className='text-red-500 mt-5'>{errorMessage.errors}</h3>
+                                        <h3 className='text-red-500 mt-5'>{}</h3>
                                 </div>
                                 )
                             }

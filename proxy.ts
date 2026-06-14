@@ -11,7 +11,7 @@ export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl
     const token = request.cookies.get('token')?.value
 
-    // Public route
+    // Public route definition
     const isPublicRoute = pathname == '/login' || pathname == '/' || pathname == '/register'
 
 
@@ -30,7 +30,12 @@ export async function proxy(request: NextRequest) {
         console.log(`The pathname is ${pathname}`)
 
         if (isPublicRoute) {
-            return NextResponse.redirect(new URL('/dashboard', request.url))
+            // return NextResponse.redirect(new URL('/dashboard', request.url))
+            // clone the current url
+            const url = request.nextUrl.clone()
+            url.pathname = '/dashboard' 
+            
+            return NextResponse.redirect(url)
         }
     }  
     // If token does not exist
@@ -38,9 +43,11 @@ export async function proxy(request: NextRequest) {
     {
         // If the route they accessing is public
         if(isPublicRoute){
+            // Redirect to the public route
            return NextResponse.next() 
         }
         // If the rouet is not public
+        // redirect to the login page
         return NextResponse.redirect(new URL('/login', request.url))
     }
     // if token is valid, let them go to the route
@@ -48,13 +55,11 @@ export async function proxy(request: NextRequest) {
 }
 
 // These are the route that will run the middleware when access
+// These are the protected route
 export const config = {
     matcher: [
-        '/',
-        '/register',
         '/dashboard', 
-        '/login',
-        '/lists'
+        '/lists',
+        '/statistics'
     ]
-
 }

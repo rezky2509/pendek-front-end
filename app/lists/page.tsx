@@ -16,12 +16,14 @@ import toast,{Toaster} from 'react-hot-toast'
 import ModalFormURL from '@/components/ModalFormURL';
 import EditModal from '@/components/editModal';
 import DeleteModal from '@/components/deleteModal';
+import ModalQr from '@/components/ModalQr';
 
 
 type crudOperation = 
 | {operation: "Edit"}
 | {operation: "Delete"}
 | {operation: "Create"}
+| {operation: "Download"}
 
 const Page = () => {    
 
@@ -35,9 +37,14 @@ const Page = () => {
 
     const [isModalDeleteURL,setIsModalOpenDeleteURL] = useState<boolean>(false)
 
+    const [isModalQR, setIsModalQR] = useState<boolean>(false)
+    const [qrLink, setQRLink] = useState<string>('')
+
     const [payloadDelete, setPayloadDelete] = useState<recentlyAddedLinkData | undefined>(undefined)
 
     const [getListsURL,setGetListsURL] = useState<recentlyAddedLinksData>([])
+
+
 
     // Selected Link
     const [selectedLink, setSelectedLink] = useState<recentlyAddedLinkData | undefined>(undefined)
@@ -128,7 +135,12 @@ const Page = () => {
                                                 setPayloadDelete(link)
                                             }} 
                                             className='cursor-pointer'/>
-                                            <QrCode className='ml-5 cursor-pointer'/>
+                                            <QrCode
+                                            onClick={()=>{
+                                                setIsModalQR(true)
+                                                setQRLink(link.short_url)
+                                            }}
+                                             className='ml-5 cursor-pointer'/>
                                         </td>
                                         <td className='font-bold'><Link target='_blank' onClick={()=>getListsURL} href={link.short_url} >{link.short_url}</Link></td>
                                         <td>{link.long_url}</td>
@@ -172,7 +184,6 @@ const Page = () => {
                                 onClose={() => {
                                     setIsModalOpenDeleteURL(false)
                                     setPayloadDelete(undefined)
-  
                                 }}
                                 // When close, refresh the list
                                 onSuccess={()=>{
@@ -182,6 +193,23 @@ const Page = () => {
                                 payload={payloadDelete}
                             />
                         ) : null}
+
+                        {/* QR CODE Modal */}
+                        {isModalQR && 
+                            <ModalQr 
+                                short_url={qrLink} 
+                                isOpen={isModalQR} 
+                                onClose={
+                                    ()=>{
+                                        setIsModalQR(false)
+                                    }
+                                }
+                                onSuccess={()=>{
+                                    setToast({operation:"Download"})
+                                }}
+                                />
+                        }
+
                 </section>
                 <Toaster 
                 position='bottom-center'/>
