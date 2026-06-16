@@ -151,7 +151,7 @@ const EditModal: React.FC<ModalProps> = ({isOpen,onClose,urlDetail,onSuccess}) =
                                 </div>                         
                             </div>
                         </div>
-                        <div className="flex items-center space-x-4 border-t border-default pt-4 md:pt-6">
+                        <div className="flex items-center justify-center-safe space-x-4 border-t border-default pt-4 md:pt-6">
                             <button disabled={isSubmitting} type="submit" className="inline-flex items-center  text-white bg-brand hover:bg-brand-strong box-border border border-transparent focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">
                                 {/* Use flex when you one to have entire html tag within same line */}
                                 {isLoading ?                             

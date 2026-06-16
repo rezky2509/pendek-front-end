@@ -92,14 +92,14 @@ const DeleteModal: React.FC<ModalProps> = ({isOpen, onClose, payload,onSuccess})
                         if (payload) handleDelete(payload); }}>
                     {/* <Form action={''}> */}
                     <div className="grid grid-cols-1">
-                        <div className="grid-cols-1">
+                        <div className="flex justify-center-safe items-center">
                             <h1 className=''>You are about to delete the long url of <span className='font-bold'>{payload?.long_url}</span></h1>
                         </div>
-                        <div className="grid-cols-1 pt-5">
-                            <h3 className=''>With the description of  <span className='font-bold'>{payload?.description}</span></h3>
+                        <div className="flex justify-center-safe items-center pt-5">
+                            <h3 className=''>With the description of <span className='font-bold'>{payload?.description}</span></h3>
                         </div>
                     </div>
-                        <div className="flex items-center space-x-4 border-t border-default pt-4 md:pt-6">
+                        <div className="flex justify-center-safe items-center space-x-4 border-t border-default pt-4 md:pt-6">
                             <button disabled={isSubmitting} type="submit" className="inline-flex items-center text-white bg-brand hover:bg-brand-red box-border border border-transparent focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">
                                 {/* Use flex when you one to have entire html tag within same line */}
                                 {isLoading ?                             
